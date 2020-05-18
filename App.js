@@ -42,6 +42,7 @@ class App extends React.Component {
         bssid: deviceBSSID,
         password: wifiPassword,
         timeout: 50000,
+        taskCount: 1,
       })
       .then(function (results) {
         console.log(results);
@@ -91,7 +92,7 @@ class App extends React.Component {
       </SafeAreaView>
     );
   }
-};
+}
 
 const styles = StyleSheet.create({
   container: {
