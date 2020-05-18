@@ -8,6 +8,7 @@ import {
   NativeModules,
   Dimensions,
   TextInput,
+  PermissionsAndroid,
 } from 'react-native';
 import {NetworkInfo} from 'react-native-network-info';
 
@@ -19,6 +20,10 @@ class App extends React.Component {
   };
 
   componentDidMount() {
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
     NetworkInfo.getBSSID().then((bssid) => {
       this.setState({
         bssid,
