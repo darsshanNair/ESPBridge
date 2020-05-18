@@ -1,6 +1,5 @@
 package com.smartconfig.esptouch;
 
-import android.util.Base64;
 import android.util.Log;
 import android.os.AsyncTask;
 
@@ -70,7 +69,7 @@ public class ESPBridgeModule extends ReactContextBaseJavaModule {
                         promise.resolve(ret);
                     } else {
                         Log.d(TAG, "Error run ESPBridge");
-                        promise.reject("Timeoutout");
+                        promise.reject("Timeout");
                     }
                 }catch(Exception e){
                     Log.d(TAG, "Error, ESPBridge could not complete!");
@@ -99,23 +98,19 @@ public class ESPBridgeModule extends ReactContextBaseJavaModule {
         protected void onPreExecute() {
             Log.d(TAG, "Begin task");
         }
+
         @Override
         protected List<IEsptouchResult> doInBackground(String... params) {
             Log.d(TAG, "doing task");
-            int taskCount = -1;
+            int taskResultCount = -1;
             synchronized (mLock) {
-                String apSsidB64 = params[0];
-                byte[] apSsid = Base64.decode(apSsidB64, Base64.DEFAULT);
-                String apBssid64 =  params[1];
-                byte[] apBssid = Base64.decode(apBssid64, Base64.DEFAULT);
-                String apPasswordB64 = params[2];
-                byte[] apPassword = Base64.decode(apPasswordB64, Base64.DEFAULT);
-                Log.d(TAG, apSsid + " | " + apBssid + " | " + apPassword);
-                String taskCountStr = params[3];
-                taskCount = Integer.parseInt(taskCountStr);
-                mEsptouchTask = new EsptouchTask(apSsid, apBssid, apPassword, getCurrentActivity());
+                String apSsid = params[0];
+                String apBssid =  params[1];
+                String apPassword = params[2];
+                taskResultCount = Integer.parseInt(params[3]);
+                mEsptouchTask = new EsptouchTask(apSsid, apBssid, apPassword, getCurrentActivity().getApplicationContext());
             }
-            List<IEsptouchResult> resultList = mEsptouchTask.executeForResults(taskCount);
+            List<IEsptouchResult> resultList = mEsptouchTask.executeForResults(taskResultCount);
             return resultList;
         }
 

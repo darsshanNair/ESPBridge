@@ -14,7 +14,23 @@ import {NetworkInfo} from 'react-native-network-info';
 class App extends React.Component {
   state = {
     password: '',
+    ssid: '',
+    bssid: '',
   };
+
+  componentDidMount() {
+    NetworkInfo.getBSSID().then((bssid) => {
+      this.setState({
+        bssid,
+      });
+    });
+
+    NetworkInfo.getSSID().then((ssid) => {
+      this.setState({
+        ssid,
+      });
+    });
+  }
 
   handlePassword = (text) => {
     this.setState({password: text});
@@ -23,17 +39,9 @@ class App extends React.Component {
   onPressStart = () => {
     var espBridge = NativeModules.ESPBridge;
     var type = 'esptouch';
-    var deviceSSID = '';
-    var deviceBSSID = '';
+    var deviceSSID = this.state.ssid;
+    var deviceBSSID = this.state.bssid;
     var wifiPassword = this.state.password;
-
-    NetworkInfo.getBSSID().then((bssid) => {
-      deviceBSSID = bssid;
-    });
-
-    NetworkInfo.getSSID().then((ssid) => {
-      deviceSSID = ssid;
-    });
 
     espBridge
       .start({
